@@ -1,0 +1,39 @@
+my-creators-platform/
+├── package.json              # 根目录配置 (可选：用于同时启动前后端)
+├── .gitignore                # 忽略 node_modules, .env 等
+├── README.md
+│
+├── client/                   # === 前端 (Vue 3 + Vite + Tailwind) ===
+│   ├── index.html
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   ├── package.json
+│   ├── .env                  # 前端环境变量 (VITE_API_URL=http://localhost:3000)
+│   └── src/
+│       ├── api/              # API 请求封装 (axios)
+│       │   └── index.js      # 统一配置 axios 拦截器
+│       ├── assets/           # 静态资源 (Logo, Images)
+│       ├── components/       # 公共组件 (Navbar.vue, Footer.vue)
+│       ├── views/            # 页面级组件
+│       │   ├── Home.vue      # 你现在的 App.vue 主要内容放这里
+│       │   ├── Login.vue
+│       │   └── Profile.vue
+│       ├── router/           # 路由配置 (Vue Router)
+│       ├── stores/           # 状态管理 (Pinia)
+│       ├── App.vue           # 根组件 (只留 <router-view>)
+│       └── main.js           # 入口文件
+│
+└── server/                   # === 后端 (Express + PostgreSQL) ===
+    ├── package.json
+    ├── .env                  # 后端机密信息 (DATABASE_URL, PORT)
+    ├── index.js              # 入口文件 (App.listen)
+    ├── app.js                # Express App 配置 (中间件配置)
+    ├── db/                   # 数据库层
+    │   ├── index.js          # 连接池配置 (原 test/index.js 中的 pool)
+    │   └── schema.sql        # 数据库建表语句 (重要！)
+    ├── routes/               # 路由定义
+    │   ├── users.js          # router.get('/', userController.getAll)
+    │   └── orders.js
+    └── controllers/          # 业务逻辑 (处理 req, res)
+        ├── userController.js # 原路由中的回调函数逻辑
+        └── orderController.js
