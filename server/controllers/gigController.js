@@ -13,7 +13,7 @@ module.exports = {
                 g.price, 
                 g.cover_img, 
                 g.category, 
-                g.rating, -- 注意：如果表里没rating字段，后续需从reviews表聚合计算，这里暂时假设gigs表有或先不查
+                5.0 AS rating, -- 注意：如果表里没rating字段，后续需从reviews表聚合计算，这里暂时假设gigs表有或先不查
                 g.delivery_time,
                 u.username AS seller_name, 
                 u.img AS seller_avatar, 

@@ -1,20 +1,20 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import { getGigList } from '@/api/gig' // <--- 1. 引入我们刚才写好的 API
 import { ElMessage } from 'element-plus'
 
 export const useGigStore = defineStore('gig', {
   state: () => ({
-    gigs: [], // 存放服务列表
+    gigs: [], 
     loading: false
   }),
   
   actions: {
-    // 支持传入查询参数 (例如: { category: 'music', search: 'beat' })
     async fetchGigs(params = {}) {
       this.loading = true
       try {
-        // 这里的 params 会自动转换成 URL 查询字符串，如 /api/gigs?category=music
-        const res = await axios.get('/api/gigs', { params })
+        // 2. 修改这里：使用 API 方法，而不是直接 axios.get
+        const res = await getGigList(params)
+        
         this.gigs = res.data
       } catch (error) {
         console.error(error)
