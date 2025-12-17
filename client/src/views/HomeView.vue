@@ -1,25 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
-import { Search, StarFilled } from '@element-plus/icons-vue' // 确保引入了 Search
-import { ElMessage } from 'element-plus'
+import { onMounted } from 'vue'
+import { Search, StarFilled } from '@element-plus/icons-vue' 
 
-// --- 逻辑层 (保持不变) ---
-const users = ref([])
-const API_URL = '/api/users'
+// 1. 引入 Pinia 相关
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user'
 
-const fetchUsers = async () => {
-  try {
-  
-   const res = await axios.get(API_URL)
-   users.value = res.data
-    
+// 2. 初始化 store
+const userStore = useUserStore()
 
-  } catch (e) {
-    ElMessage.error('无法加载人才列表')
-  }
-}
+// 3. 使用 storeToRefs 解构数据 (保持响应式)
+// 这样 users 发生变化时，页面会自动更新
+const { users } = storeToRefs(userStore)
 
+// 4. Action (方法) 不需要 storeToRefs，直接解构或者用 userStore.fetchUsers 均可
+const { fetchUsers } = userStore
+
+// 5. 辅助函数 (纯 UI 逻辑，不需要进 Store)
 const getCardBg = (id) => {
   const bgs = [
     'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
@@ -30,7 +27,10 @@ const getCardBg = (id) => {
   return bgs[id % bgs.length]
 }
 
-onMounted(fetchUsers)
+// 6. 挂载时调用 Store 里的方法
+onMounted(() => {
+  fetchUsers()
+})
 </script>
 
 <template>
@@ -113,7 +113,7 @@ onMounted(fetchUsers)
           </div>
 
           <div class="mt-auto flex justify-between items-center pt-4 border-t border-[#f5f5f7]">
-            <span class="text-sm font-semibold text-[#1d1d1f]">¥2,000 起</span>
+            <span class="text-sm font-semibold text-[#1d1d1f]">¥{{ user.price || '2,000' }} 起</span>
             <button class="bg-[#0071e3] text-white border-none px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors hover:bg-[#0077ed]">
               联系
             </button>
@@ -130,9 +130,6 @@ onMounted(fetchUsers)
 </template>
 
 <style scoped>
-/* Tailwind 对于复杂的 keyframes 组合动画支持不如原生 CSS 直观。
-  为了保持“呼吸”和“上浮”的混合效果，这里保留 CSS 动画定义。
-*/
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(40px); filter: blur(10px); }
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -146,6 +143,6 @@ onMounted(fetchUsers)
 .hero-animate-wrapper {
   animation: 
     fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-    floatingDepth 6s ease-in-out infinite 1s; /* 1s delay matches fadeInUp duration approx */
+    floatingDepth 6s ease-in-out infinite 1s; 
 }
 </style>
